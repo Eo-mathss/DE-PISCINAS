@@ -1,1 +1,209 @@
 
+/* ==========================================
+   CONFIGURAÇÕES GLOBAIS
+   ========================================== */
+html, body {
+    overflow-x: hidden;
+    width: 100%;
+    background-color: transparent; 
+    color: #334155; 
+}
+
+/* ==========================================
+   FUNDO GLOBAL ANIMADO (O OCEANO)
+   ========================================== */
+#global-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1; 
+    background: linear-gradient(-45deg, #ccfbf1, #bae6fd, #7dd3fc, #38bdf8); 
+    background-size: 400% 400%;
+    animation: gradientFlow 15s ease infinite;
+    overflow: hidden;
+}
+
+@keyframes gradientFlow {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* Orbes embaçados flutuando no fundo para dar profundidade */
+.ambient-blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.6;
+    animation: floatBlob 20s infinite alternate ease-in-out;
+}
+.blob-1 { top: -10%; left: -10%; width: 50vw; height: 50vw; background: #0284c7; animation-delay: 0s; }
+.blob-2 { bottom: -20%; right: -10%; width: 60vw; height: 60vw; background: #2dd4bf; animation-delay: -5s; }
+.blob-3 { top: 40%; left: 40%; width: 40vw; height: 40vw; background: #818cf8; animation-delay: -10s; opacity: 0.5; }
+
+@keyframes floatBlob {
+    0% { transform: translate(0, 0) scale(1); }
+    100% { transform: translate(10vw, 10vh) scale(1.1); }
+}
+
+/* ==========================================
+   ELEMENTOS TEMÁTICOS DA PISCINA (Responsivos)
+   ========================================== */
+.pool-item {
+    position: absolute;
+    opacity: 0.15; 
+    pointer-events: none; 
+    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
+}
+
+.item-boia { 
+    top: 15%; right: 5%; width: 90px; 
+    animation: floatItem1 12s ease-in-out infinite; 
+}
+.item-bola { 
+    bottom: 10%; left: 5%; width: 80px; 
+    animation: floatItem2 15s ease-in-out infinite; 
+}
+.item-guarda-sol { 
+    top: 50%; left: -10%; width: 130px; 
+    animation: floatItem3 18s ease-in-out infinite alternate; 
+    opacity: 0.1; 
+}
+.item-boia-2 {
+    bottom: 30%; right: -5%; width: 70px;
+    animation: floatItem1 14s ease-in-out infinite reverse;
+}
+
+/* Ajustes para Telas Maiores (Tablets e PCs) */
+@media (min-width: 768px) {
+    .item-boia { width: 140px; right: 10%; }
+    .item-bola { width: 120px; left: 8%; }
+    .item-guarda-sol { width: 180px; left: -5%; }
+    .item-boia-2 { width: 100px; right: 5%; }
+}
+
+@keyframes floatItem1 {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-40px) rotate(15deg); }
+}
+@keyframes floatItem2 {
+    0%, 100% { transform: translateY(0) rotate(0deg) scale(1); }
+    50% { transform: translateY(-30px) rotate(-25deg) scale(1.05); }
+}
+@keyframes floatItem3 {
+    0% { transform: translateY(0) rotate(10deg); }
+    100% { transform: translateY(-50px) rotate(-10deg); }
+}
+
+/* ==========================================
+   EFEITO VIDRO (GLASSMORPHISM)
+   ========================================== */
+.glass-panel {
+    background: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+}
+
+.glass-card {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    transition: all 0.3s ease;
+}
+.glass-card:hover {
+    background: rgba(255, 255, 255, 0.9);
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(14, 165, 233, 0.15);
+    border-color: rgba(255, 255, 255, 0.9);
+}
+
+/* ==========================================
+   BOLHAS GLOBAIS
+   ========================================== */
+.bubble {
+    position: absolute;
+    background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.2));
+    border-radius: 50%;
+    box-shadow: inset 0 0 10px rgba(255,255,255,0.6);
+    animation: floatUpGlobal infinite ease-in;
+    pointer-events: none;
+}
+@keyframes floatUpGlobal {
+    0% { transform: translateY(110vh) scale(0.5); opacity: 0; }
+    30% { opacity: 0.7; }
+    100% { transform: translateY(-20vh) scale(1.2); opacity: 0; }
+}
+
+/* ==========================================
+   TELA DE CARREGAMENTO (PRELOADER)
+   ========================================== */
+#preloader {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
+    background-color: #0f766e; z-index: 99999;
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    transition: transform 1.2s cubic-bezier(0.77, 0, 0.175, 1), border-radius 1.2s cubic-bezier(0.77, 0, 0.175, 1);
+    transform-origin: top;
+}
+#preloader.hide { transform: translateY(-100%); border-bottom-left-radius: 60vw; border-bottom-right-radius: 60vw; }
+.loading-bar-container { width: 200px; height: 6px; background: rgba(255,255,255,0.2); border-radius: 10px; overflow: hidden; margin-top: 30px; }
+.loading-bar { width: 100%; height: 100%; background: #5eead4; animation: loadingSlide 1.5s ease-in-out infinite; transform-origin: left; }
+@keyframes loadingSlide { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
+
+/* ==========================================
+   SLIDER DE SERVIÇOS
+   ========================================== */
+.slider-container {
+    display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 1.5rem;
+    padding: 1rem 0 2rem 0; scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.8) rgba(255,255,255,0.2);
+}
+.slider-container::-webkit-scrollbar { height: 10px; }
+.slider-container::-webkit-scrollbar-track { background: rgba(255,255,255,0.3); border-radius: 10px; }
+.slider-container::-webkit-scrollbar-thumb { background-color: rgba(255,255,255,0.8); border-radius: 10px; }
+.slider-item { flex: 0 0 85%; scroll-snap-align: center; }
+@media (min-width: 768px) { .slider-item { flex: 0 0 45%; } }
+@media (min-width: 1024px) { .slider-item { flex: 0 0 30%; } }
+
+/* ==========================================
+   LAYOUT DO MODAL
+   ========================================== */
+#service-modal {
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    background-color: #ffffff; z-index: 100000;
+    display: flex; flex-direction: column;
+    transform: translateX(100%); transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+#service-modal.active { transform: translateX(0); }
+
+#modal-3d-container {
+    width: 100%; height: 35vh; min-height: 250px;
+    border-radius: 1.5rem; overflow: hidden;
+    background: linear-gradient(to bottom, #e0f2fe, #bae6fd);
+    touch-action: pan-y; cursor: grab; border: 2px solid #e2e8f0;
+}
+#modal-3d-container:active { cursor: grabbing; }
+
+.modal-gallery-container { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 1rem; padding-bottom: 1rem; scrollbar-width: thin; scrollbar-color: #cbd5e1 #f1f5f9; }
+.modal-gallery-container::-webkit-scrollbar { height: 8px; }
+.modal-gallery-item { flex: 0 0 85%; scroll-snap-align: center; border-radius: 1rem; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); aspect-ratio: 4/3; border: 1px solid #e2e8f0; }
+@media (min-width: 640px) { .modal-gallery-item { flex: 0 0 45%; } }
+
+/* ==========================================
+   ANIMAÇÕES DE REVEAL (Scroll)
+   ========================================== */
+.reveal { opacity: 0; transform: translateY(40px); transition: all 1s cubic-bezier(0.25, 0.8, 0.25, 1); }
+.reveal.active { opacity: 1; transform: translateY(0); }
+
+/* ==========================================
+   BOTÃO WHATSAPP FLUTUANTE
+   ========================================== */
+.float-wpp { animation: pulse-green 2s infinite; }
+@keyframes pulse-green {
+    0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7); }
+    70% { box-shadow: 0 0 0 15px rgba(37, 211, 102, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
+}
