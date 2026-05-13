@@ -3,23 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>DE + PISCINAS | Projetos e Execução</title>
+    
+    <!-- SEO e Meta Tags Essenciais -->
+    <title>DE + PISCINAS | Projetos, Execução e Remodelação de Piscinas</title>
+    <meta name="description" content="Engenharia de ponta, reformas modernas e instalação de equipamentos para a sua área de lazer. Orçamentos sem compromisso em Marília e Região.">
+    <meta name="keywords" content="piscinas, construção de piscina, piscina de vinil, piscina de alvenaria, remodelação de piscina, vazamento piscina, Marília">
+    
+    <!-- Open Graph (Foto que aparece ao compartilhar o link) -->
+    <meta property="og:title" content="DE + PISCINAS | A sua área de lazer em boas mãos">
+    <meta property="og:description" content="Especialista em construção, reformas e automação de piscinas. Transforme o seu quintal.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://seusite.com.br">
+    <meta property="og:image" content="assets/img/logo-og.jpg">
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Fontes Amigáveis -->
+    <!-- Fontes Amigáveis e Legíveis -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800;900&family=Poppins:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800;900&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- Three.js para o 3D -->
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
 
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
 
+    <!-- Configuração do Tailwind -->
     <script>
         tailwind.config = {
             theme: {
@@ -40,137 +53,70 @@
         }
     </script>
 
-    <style>
-        html, body {
-            overflow-x: hidden;
-            width: 100%;
-            background-color: #f8fafc;
-        }
-
-        /* ==========================================
-           TELA DE CARREGAMENTO (LIQUID PRELOADER)
-           ========================================== */
-        #preloader {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100vh;
-            background-color: #0f766e;
-            z-index: 99999;
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-            transition: transform 1.2s cubic-bezier(0.77, 0, 0.175, 1), border-radius 1.2s cubic-bezier(0.77, 0, 0.175, 1);
-            transform-origin: top;
-        }
-        #preloader.hide {
-            transform: translateY(-100%);
-            border-bottom-left-radius: 60vw;
-            border-bottom-right-radius: 60vw;
-        }
-        .loading-bar-container {
-            width: 200px; height: 4px; background: rgba(255,255,255,0.2);
-            border-radius: 10px; overflow: hidden; margin-top: 30px;
-        }
-        .loading-bar {
-            width: 100%; height: 100%; background: #5eead4;
-            animation: loadingSlide 1.5s ease-in-out infinite;
-            transform-origin: left;
-        }
-        @keyframes loadingSlide {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
-        }
-        .drop-anim { animation: bounceDrop 2s infinite ease-in-out; }
-        @keyframes bounceDrop {
-            0%, 100% { transform: translateY(0) scale(1); opacity: 1; }
-            50% { transform: translateY(15px) scale(0.9); opacity: 0.7; }
-        }
-
-        /* Slider Principal de Serviços */
-        .slider-container {
-            display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 1.5rem;
-            padding: 1rem 0 2rem 0; -ms-overflow-style: none; scrollbar-width: none;  
-        }
-        .slider-container::-webkit-scrollbar { display: none; }
-        .slider-item { flex: 0 0 85%; scroll-snap-align: center; }
-        @media (min-width: 768px) { .slider-item { flex: 0 0 45%; } }
-        @media (min-width: 1024px) { .slider-item { flex: 0 0 30%; } }
-
-        /* ==========================================
-           LAYOUT DO MODAL (App Flexbox)
-           ========================================== */
-        #service-modal {
-            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-            background-color: #ffffff; z-index: 1000;
-            display: flex; flex-direction: column;
-            transform: translateX(100%); transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-        }
-        #service-modal.active { transform: translateX(0); }
-
-        #modal-transition-overlay {
-            position: absolute; inset: 0; background: #f0fdfa; z-index: 50;
-            transition: opacity 0.5s ease; pointer-events: none;
-        }
-
-        /* Container do 3D dentro do Modal */
-        #modal-3d-container {
-            width: 100%; height: 35vh; min-height: 250px;
-            border-radius: 1.5rem; overflow: hidden;
-            background: linear-gradient(to bottom, #e0f2fe, #bae6fd);
-            touch-action: pan-y; cursor: grab;
-        }
-        #modal-3d-container:active { cursor: grabbing; }
-
-        /* Mini-Galeria DENTRO do Modal */
-        .modal-gallery-container {
-            display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 1rem;
-            padding-bottom: 1rem; -ms-overflow-style: none; scrollbar-width: none;
-        }
-        .modal-gallery-container::-webkit-scrollbar { display: none; }
-        .modal-gallery-item {
-            flex: 0 0 80%; scroll-snap-align: center; border-radius: 1rem; overflow: hidden;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); aspect-ratio: 4/3;
-        }
-        @media (min-width: 640px) { .modal-gallery-item { flex: 0 0 45%; } }
-
-        /* Efeitos e Animações */
-        .bubble {
-            position: absolute; background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.1));
-            border-radius: 50%; box-shadow: inset 0 0 10px rgba(255,255,255,0.5);
-            animation: floatUp infinite ease-in; pointer-events: none;
-        }
-        @keyframes floatUp {
-            0% { transform: translateY(100vh) scale(0.5); opacity: 0; }
-            50% { opacity: 0.6; }
-            100% { transform: translateY(-20vh) scale(1.2); opacity: 0; }
-        }
-
-        .custom-shape-divider-bottom {
-            position: absolute; bottom: 0; left: 0; width: 100%; overflow: hidden; line-height: 0; transform: rotate(180deg);
-        }
-        .custom-shape-divider-bottom svg { position: relative; display: block; width: calc(100% + 1.3px); height: 80px; }
-        .custom-shape-divider-bottom .shape-fill { fill: #f8fafc; }
-
-        .blob-mask {
-            border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
-            animation: blob-bounce 8s infinite alternate;
-        }
-        @keyframes blob-bounce {
-            0% { border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%; }
-            100% { border-radius: 60% 40% 30% 70% / 60% 50% 40% 50%; }
-        }
-
-        .reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s ease-out; }
-        .reveal.active { opacity: 1; transform: translateY(0); }
-    </style>
+    <!-- CHAMADA PARA O ARQUIVO CSS EXTERNO -->
+    <link rel="stylesheet" href="css/style.css">
 </head>
-<body class="text-slate-800 antialiased overflow-hidden">
+<body class="text-slate-800 antialiased overflow-x-hidden relative">
 
-    <!-- PRELOADER (TELA DE CARREGAMENTO) -->
+    <!-- O OCEANO ANIMADO (Fundo Fixo) -->
+    <div id="global-background">
+        <!-- Blobs para profundidade -->
+        <div class="ambient-blob blob-1"></div>
+        <div class="ambient-blob blob-2"></div>
+        <div class="ambient-blob blob-3"></div>
+        
+        <!-- ELEMENTOS DE PISCINA DECORATIVOS -->
+        <!-- Boia de Pato Gigante -->
+        <svg class="pool-item item-boia" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <ellipse cx="50" cy="70" rx="35" ry="18" stroke="white" stroke-width="4" fill="none"/>
+            <ellipse cx="50" cy="70" rx="12" ry="6" stroke="white" stroke-width="3" fill="none"/>
+            <path d="M 25,65 C 5,30 25,10 40,20 C 55,30 45,55 40,65" fill="none" stroke="white" stroke-width="4"/>
+            <path d="M 25,25 L 8,30 L 25,35" fill="none" stroke="white" stroke-width="3" stroke-linejoin="round"/>
+            <circle cx="35" cy="25" r="2.5" fill="white"/>
+            <path d="M 85,70 C 95,60 90,40 75,55" fill="none" stroke="white" stroke-width="3" stroke-linecap="round"/>
+        </svg>
+
+        <!-- Bola de Praia -->
+        <svg class="pool-item item-bola" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="50" cy="50" r="45" stroke="white" stroke-width="4"/>
+            <circle cx="50" cy="20" r="8" stroke="white" stroke-width="3"/>
+            <path d="M 43,24 C 20,40 10,70 14,80" fill="none" stroke="white" stroke-width="3"/>
+            <path d="M 50,28 C 50,50 50,90 50,95" fill="none" stroke="white" stroke-width="3"/>
+            <path d="M 57,24 C 80,40 90,70 86,80" fill="none" stroke="white" stroke-width="3"/>
+        </svg>
+
+        <!-- Guarda-sol de Praia (Vista Lateral) -->
+        <svg class="pool-item item-guarda-sol" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M 10,50 C 10,10 90,10 90,50" fill="none" stroke="white" stroke-width="4"/>
+            <path d="M 10,50 Q 20,40 30,50 Q 40,40 50,50 Q 60,40 70,50 Q 80,40 90,50" fill="none" stroke="white" stroke-width="4" stroke-linejoin="round"/>
+            <line x1="50" y1="12" x2="50" y2="20" stroke="white" stroke-width="4" stroke-linecap="round"/>
+            <line x1="50" y1="50" x2="50" y2="95" stroke="white" stroke-width="5" stroke-linecap="round"/>
+            <path d="M 30,50 C 35,30 45,20 50,20" fill="none" stroke="white" stroke-width="3"/>
+            <path d="M 70,50 C 65,30 55,20 50,20" fill="none" stroke="white" stroke-width="3"/>
+        </svg>
+
+        <!-- Boia Salva-Vidas Clássica -->
+        <svg class="pool-item item-boia-2" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="50" cy="50" r="35" stroke="white" stroke-width="14"/>
+            <path d="M 50,8 L 50,22" stroke="white" stroke-width="6" stroke-linecap="round"/>
+            <path d="M 50,78 L 50,92" stroke="white" stroke-width="6" stroke-linecap="round"/>
+            <path d="M 8,50 L 22,50" stroke="white" stroke-width="6" stroke-linecap="round"/>
+            <path d="M 78,50 L 92,50" stroke="white" stroke-width="6" stroke-linecap="round"/>
+            <circle cx="50" cy="50" r="46" stroke="white" stroke-width="2" stroke-dasharray="6 6"/>
+        </svg>
+
+        <!-- Container das bolhas animadas -->
+        <div id="bubbles-container" class="absolute inset-0 w-full h-full"></div>
+    </div>
+
+    <!-- PRELOADER -->
     <div id="preloader">
         <div class="flex flex-col items-center">
-            <i data-lucide="droplet" class="w-16 h-16 text-aqua-300 drop-anim mb-4 drop-shadow-[0_0_15px_rgba(94,234,212,0.5)]"></i>
+            <i data-lucide="droplet" class="w-16 h-16 text-aqua-300 mb-4 drop-shadow-[0_0_15px_rgba(94,234,212,0.5)] animate-bounce"></i>
             <h1 class="font-title text-4xl md:text-5xl font-black text-white tracking-widest text-center">
                 DE <span class="text-water">+</span> PISCINAS
             </h1>
-            <p class="text-aqua-100/70 text-sm mt-2 uppercase tracking-[0.3em] font-medium">A preparar o projeto...</p>
+            <p class="text-white text-base mt-2 font-medium">Preparando o ambiente...</p>
             
             <div class="loading-bar-container">
                 <div class="loading-bar"></div>
@@ -178,618 +124,285 @@
         </div>
     </div>
 
-    <!-- Navbar -->
-    <nav class="fixed w-full z-40 transition-all duration-300 bg-white/90 backdrop-blur-md shadow-sm py-3" id="navbar">
+    <!-- BOTÃO WHATSAPP FLUTUANTE -->
+    <a href="https://wa.me/5514996945087?text=Ol%C3%A1!%20Vim%20pelo%20site%20e%20gostaria%20de%20fazer%20um%20or%C3%A7amento." 
+       target="_blank" 
+       class="fixed bottom-6 right-6 z-50 bg-[#25D366] text-white py-3 px-4 md:px-6 rounded-full shadow-2xl hover:bg-green-700 transition-colors float-wpp flex items-center justify-center gap-2 border-2 border-white"
+       aria-label="Contactar pelo WhatsApp">
+        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" viewBox="0 0 16 16"><path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592zm3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.729.729 0 0 0-.529.247c-.182.198-.691.677-.691 1.654 0 .977.71 1.916.81 2.049.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232z"/></svg>
+        <span class="hidden md:inline font-bold text-lg">Atendimento</span>
+    </a>
+
+    <!-- Navbar Vidro -->
+    <nav class="fixed w-full z-40 transition-all duration-300 glass-panel border-b-0 py-3" id="navbar">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-14">
-                <a href="#" class="flex items-center gap-2 group">
-                    <div class="bg-gradient-to-br from-water to-aqua-500 text-white p-2 rounded-xl">
+            <div class="flex justify-between items-center h-16">
+                <a href="#" class="flex items-center gap-3 group">
+                    <div class="bg-aqua-900 text-white p-2.5 rounded-xl shadow-lg">
                         <i data-lucide="waves" class="w-6 h-6"></i>
                     </div>
-                    <span class="font-title font-black text-2xl text-aqua-900 tracking-tight">DE<span class="text-water">+</span>PISCINAS</span>
+                    <span class="font-title font-black text-2xl md:text-3xl text-aqua-900 tracking-tight drop-shadow-sm">DE<span class="text-water">+</span>PISCINAS</span>
                 </a>
-                <div class="hidden md:flex items-center space-x-8 font-medium text-slate-600">
-                    <a href="#equipe" class="hover:text-aqua-500 transition-colors">A Equipe</a>
-                    <a href="#servicos" class="hover:text-aqua-500 transition-colors">Especialidades</a>
-                    <a href="#contato" class="bg-aqua-500 hover:bg-water text-white px-6 py-2.5 rounded-full shadow-lg transition-all font-bold">Orçamento Online</a>
+                <div class="hidden md:flex items-center space-x-8 font-semibold text-slate-800 text-lg drop-shadow-sm">
+                    <a href="#equipe" class="hover:text-aqua-600 transition-colors">O Especialista</a>
+                    <a href="#servicos" class="hover:text-aqua-600 transition-colors">Serviços Prestados</a>
+                    <a href="#contato" class="bg-slate-900 hover:bg-slate-800 text-white px-6 py-3 rounded-full shadow-lg transition-all font-bold">Solicitar Orçamento</a>
                 </div>
-                <button id="mobile-menu-btn" class="md:hidden text-aqua-900 focus:outline-none p-2 bg-aqua-50 rounded-lg">
-                    <i data-lucide="menu" class="w-6 h-6"></i>
+                <button id="mobile-menu-btn" class="md:hidden text-aqua-900 focus:outline-none p-3 bg-white/50 backdrop-blur-md rounded-lg border border-white" aria-label="Abrir Menu">
+                    <i data-lucide="menu" class="w-7 h-7"></i>
                 </button>
             </div>
         </div>
         <!-- Mobile Menu -->
-        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-slate-100 shadow-xl absolute w-full">
-            <div class="px-4 pt-2 pb-6 space-y-2 text-center flex flex-col">
-                <a href="#equipe" class="block px-3 py-3 text-slate-600 font-medium hover:bg-aqua-50 rounded-xl">A Equipe</a>
-                <a href="#servicos" class="block px-3 py-3 text-slate-600 font-medium hover:bg-aqua-50 rounded-xl">Especialidades</a>
-                <!-- LINK CORRIGIDO NO MENU MOBILE -->
-                <a href="https://wa.me/5514996945087?text=Ol%C3%A1!%20Vim%20pelo%20site%20e%20gostaria%20de%20fazer%20um%20or%C3%A7amento." target="_blank" class="inline-block mt-4 bg-gradient-to-r from-water to-aqua-500 text-white font-bold px-6 py-3 rounded-full shadow-lg">Chamar no WhatsApp</a>
+        <div id="mobile-menu" class="hidden md:hidden glass-panel border-t border-white/50 shadow-2xl absolute w-full mt-3">
+            <div class="px-4 pt-4 pb-8 space-y-3 text-center flex flex-col">
+                <a href="#equipe" class="block px-4 py-4 text-slate-800 font-bold text-lg hover:bg-white/50 rounded-xl transition">Conhecer o Especialista</a>
+                <a href="#servicos" class="block px-4 py-4 text-slate-800 font-bold text-lg hover:bg-white/50 rounded-xl transition">Áreas de Atuação</a>
+                <a href="https://wa.me/5514996945087?text=Ol%C3%A1!%20Vim%20pelo%20site%20e%20gostaria%20de%20fazer%20um%20or%C3%A7amento." target="_blank" class="inline-block mt-4 bg-[#25D366] text-white font-bold text-lg px-6 py-4 rounded-xl shadow-lg flex justify-center items-center gap-2">
+                    <i data-lucide="message-circle" class="w-6 h-6"></i> Falar no WhatsApp
+                </a>
             </div>
         </div>
     </nav>
 
-    <!-- Hero Section -->
-    <section class="relative min-h-[90vh] md:min-h-screen flex items-center justify-center bg-gradient-to-b from-aqua-50 via-[#e0f2fe] to-water overflow-hidden pt-20">
-        <div id="bubbles-container" class="absolute inset-0 z-0 overflow-hidden pointer-events-none"></div>
-
-        <div class="relative z-10 max-w-7xl mx-auto px-4 text-center">
-            <div class="inline-flex items-center gap-2 bg-white/80 backdrop-blur-sm px-5 py-2 rounded-full text-aqua-900 font-semibold mb-6 shadow-sm reveal">
-                <i data-lucide="sun" class="w-5 h-5 text-amber-500"></i> O verão espera por si no seu quintal
+    <!-- Header Principal -->
+    <header class="relative min-h-screen flex items-center justify-center pt-24 pb-12 z-10">
+        <div class="relative z-10 max-w-5xl mx-auto px-4 text-center">
+            <div class="inline-flex items-center gap-2 glass-panel px-6 py-3 rounded-full text-slate-800 font-bold mb-8 reveal">
+                <i data-lucide="sun" class="w-6 h-6 text-amber-500 fill-amber-100"></i> O seu projeto realizado com excelência
             </div>
-            <h1 class="font-title text-5xl md:text-7xl lg:text-8xl font-black text-aqua-900 mb-6 drop-shadow-md leading-tight reveal" style="transition-delay: 100ms;">
-                A sua área de lazer <br class="hidden md:block">
-                <span class="text-transparent bg-clip-text bg-gradient-to-r from-aqua-500 to-blue-600">em boas mãos.</span>
+            <h1 class="font-title text-5xl md:text-7xl lg:text-8xl font-black text-slate-900 mb-6 leading-tight reveal drop-shadow-md" style="transition-delay: 100ms;">
+                Sua piscina construída <br class="hidden md:block">
+                <span class="text-slate-900 border-b-4 md:border-b-8 border-aqua-400 pb-1">sem dores de cabeça.</span>
             </h1>
-            <p class="text-lg md:text-2xl text-slate-700 max-w-2xl mx-auto mb-10 font-medium reveal" style="transition-delay: 200ms;">
-                Engenharia de ponta, remodelações modernas e instalação de equipamentos. A piscina dos seus sonhos sem dores de cabeça.
+            <p class="text-xl md:text-2xl text-slate-800 max-w-3xl mx-auto mb-10 font-semibold leading-relaxed reveal drop-shadow-sm" style="transition-delay: 200ms;">
+                Construção do zero, reformas estruturais e instalação de equipamentos. Entrego a sua obra no prazo estabelecido, com transparência e altíssimo padrão de qualidade.
             </p>
             <div class="flex flex-col sm:flex-row items-center justify-center gap-4 reveal" style="transition-delay: 300ms;">
-                <!-- LINK CORRIGIDO NO BOTAO HERO -->
-                <a href="#contato" class="w-full sm:w-auto bg-aqua-900 hover:bg-aqua-700 text-white font-bold text-lg px-8 py-4 rounded-full shadow-xl transition-transform transform hover:scale-105 flex items-center justify-center gap-2">
-                    Iniciar Projeto <i data-lucide="droplets" class="w-5 h-5"></i>
+                <a href="#contato" class="w-full sm:w-auto bg-aqua-900 hover:bg-aqua-800 text-white font-bold text-lg md:text-xl px-8 md:px-10 py-4 md:py-5 rounded-full shadow-[0_10px_25px_rgba(15,118,110,0.4)] transition-transform transform hover:scale-105 flex items-center justify-center gap-3">
+                    Solicitar Orçamento <i data-lucide="calculator" class="w-6 h-6"></i>
                 </a>
-                <a href="#servicos" class="w-full sm:w-auto bg-white/50 hover:bg-white/80 text-aqua-900 font-bold text-lg px-8 py-4 rounded-full backdrop-blur-sm transition-colors">
-                    Nossas Especialidades
+                <a href="#servicos" class="w-full sm:w-auto glass-panel hover:bg-white/80 text-slate-900 font-bold text-lg md:text-xl px-8 md:px-10 py-4 md:py-5 rounded-full transition-colors flex items-center justify-center gap-3 shadow-lg">
+                    Explorar Serviços <i data-lucide="arrow-down" class="w-6 h-6"></i>
                 </a>
             </div>
         </div>
+    </header>
 
-        <div class="custom-shape-divider-bottom">
-            <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
-                <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V120H0V95.8C59.71,118.08,130.83,123.15,191.56,108.21,245.15,94.9,286.27,65.3,321.39,56.44Z" class="shape-fill"></path>
-            </svg>
-        </div>
-    </section>
-
-    <!-- Equipa -->
-    <section id="equipe" class="py-20 bg-[#f8fafc] relative">
+    <!-- O Especialista (Painéis de Vidro) -->
+    <section id="equipe" class="py-24 relative z-10">
         <div class="max-w-6xl mx-auto px-4">
-            <div class="text-center mb-16 reveal">
-                <h2 class="font-title text-4xl md:text-5xl font-black text-aqua-900 mb-4">A força por trás da obra</h2>
-                <p class="text-slate-600 max-w-2xl mx-auto text-lg">Sem empresas subcontratadas. A nossa família a cuidar do lazer da sua.</p>
+            <div class="text-center mb-16 reveal glass-panel rounded-[3rem] p-8 inline-block max-w-4xl mx-auto w-full">
+                <h2 class="font-title text-4xl md:text-5xl font-black text-slate-900 mb-6 drop-shadow-sm">Quem será o responsável pela sua obra</h2>
+                <p class="text-slate-800 max-w-3xl mx-auto text-lg md:text-xl font-medium leading-relaxed">Atuo diretamente na execução e gestão de cada projeto, do início ao fim. Sem o repasse integral para terceiros, garanto que o seu investimento seja tratado com a máxima responsabilidade e profissionalismo.</p>
             </div>
 
-            <div class="grid md:grid-cols-2 gap-12 items-center">
+            <div class="max-w-3xl mx-auto">
                 <!-- Edemilson -->
-                <div class="bg-white p-8 rounded-[2.5rem] shadow-sm relative reveal">
-                    <div class="absolute -top-6 -right-6 bg-aqua-100 w-24 h-24 rounded-full -z-10 blob-mask bg-gradient-to-br from-aqua-300 to-water"></div>
-                    <div class="flex flex-col sm:flex-row gap-6 items-center sm:items-start text-center sm:text-left">
-                        <div class="w-32 h-32 flex-shrink-0">
-                            <img src="" alt="Edemilson Martins" class="w-full h-full object-cover blob-mask border-4 border-aqua-100 shadow-lg">
+                <div class="glass-card p-6 md:p-10 rounded-[2.5rem] flex flex-col h-full reveal">
+                    <div class="flex flex-col sm:flex-row gap-6 items-center sm:items-start text-center sm:text-left mb-6">
+                        <div class="w-28 h-28 md:w-32 md:h-32 flex-shrink-0 bg-white/50 rounded-full flex items-center justify-center text-slate-400 border-4 border-white shadow-lg overflow-hidden">
+                            <!-- IMAGEM DE PERFIL -->
+                            <img src="assets/img/edemilson.jpg" alt="Foto de Edemilson Martins" class="w-full h-full object-cover" loading="lazy" onerror="this.src='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'">
                         </div>
-                        <div>
-                            <div class="inline-block bg-aqua-100 text-aqua-700 text-xs font-bold px-3 py-1 rounded-full mb-2 uppercase tracking-wide">Fundador & Estrutura</div>
-                            <h3 class="font-title text-2xl font-black text-slate-800 mb-2">Edemilson Martins</h3>
-                            <p class="text-slate-600 text-sm leading-relaxed">No mercado desde 2010. O Edemilson é a garantia de que a estrutura não vai ceder, que o esquadro está perfeito e que a obra será entregue com máxima qualidade e limpeza.</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Gláucio -->
-                <div class="bg-white p-8 rounded-[2.5rem] shadow-sm relative reveal" style="transition-delay: 150ms;">
-                    <div class="absolute -bottom-6 -left-6 bg-blue-100 w-24 h-24 rounded-full -z-10 blob-mask bg-gradient-to-tr from-water to-blue-400"></div>
-                    <div class="flex flex-col sm:flex-row gap-6 items-center sm:items-start text-center sm:text-left">
-                        <div class="w-32 h-32 flex-shrink-0">
-                            <img src="" alt="Gláucio" class="w-full h-full object-cover blob-mask border-4 border-blue-100 shadow-lg" style="animation-delay: -2s;">
-                        </div>
-                        <div>
-                            <div class="inline-block bg-blue-100 text-blue-700 text-xs font-bold px-3 py-1 rounded-full mb-2 uppercase tracking-wide">Técnico de Execução</div>
-                            <h3 class="font-title text-2xl font-black text-slate-800 mb-2">Gláucio</h3>
-                            <p class="text-slate-600 text-sm leading-relaxed">O braço direito na obra. Focado em garantir que cada detalhe saia perfeito, desde a preparação do terreno até ao auxílio na parte hidráulica e acabamento fino.</p>
+                        <div class="mt-2">
+                            <div class="inline-block bg-slate-900 text-white text-xs md:text-sm font-bold px-4 py-1.5 rounded-full mb-3 uppercase tracking-wide shadow-sm">Fundador e Especialista</div>
+                            <h3 class="font-title text-2xl md:text-3xl font-black text-slate-900 mb-1">Edemilson Martins</h3>
                         </div>
                     </div>
+                    <p class="text-slate-800 font-medium text-base md:text-lg leading-relaxed flex-grow">Na área desde 2010. Asseguro que a estrutura da sua piscina seja executada com rigor técnico e esquadro perfeito. Acompanho de perto desde a escavação até a finalização hidráulica, mantendo o canteiro de obras sempre limpo, seguro e organizado.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- SERVIÇOS -->
-    <section id="servicos" class="py-24 bg-white relative overflow-hidden border-t border-slate-100">
+    <!-- SERVIÇOS (Cards de Vidro) -->
+    <section id="servicos" class="py-24 relative z-10">
         <div class="max-w-7xl mx-auto px-4">
-            <div class="flex justify-between items-end mb-10 reveal">
-                <div>
-                    <p class="text-aqua-500 font-bold uppercase tracking-widest text-sm mb-2">Engenharia e Soluções</p>
-                    <h2 class="font-title text-4xl md:text-5xl font-black text-aqua-900">Como podemos ajudar?</h2>
+            <div class="flex flex-col md:flex-row justify-between items-center md:items-end mb-12 gap-6 reveal">
+                <div class="text-center md:text-left glass-panel px-8 py-6 rounded-[2rem]">
+                    <p class="text-aqua-800 font-extrabold uppercase tracking-widest text-sm mb-3">Áreas de Atuação</p>
+                    <h2 class="font-title text-4xl md:text-5xl font-black text-slate-900">Serviços Prestados</h2>
                 </div>
-                <div class="hidden md:flex text-slate-400 items-center gap-2">
-                    <i data-lucide="arrow-left" class="w-4 h-4"></i> Deslize os cartões <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                
+                <div class="hidden md:flex glass-panel p-2 rounded-2xl items-center gap-2 shadow-lg">
+                    <button class="bg-white/70 hover:bg-white p-3 rounded-xl transition shadow-sm text-slate-800 font-bold flex items-center gap-2" onclick="document.querySelector('.slider-container').scrollBy({left: -350, behavior: 'smooth'})" aria-label="Voltar">
+                        <i data-lucide="arrow-left" class="w-5 h-5"></i> Anterior
+                    </button>
+                    <button class="bg-white/70 hover:bg-white p-3 rounded-xl transition shadow-sm text-slate-800 font-bold flex items-center gap-2" onclick="document.querySelector('.slider-container').scrollBy({left: 350, behavior: 'smooth'})" aria-label="Avançar">
+                        Próximo <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                    </button>
                 </div>
             </div>
 
-            <div class="slider-container reveal">
+            <div class="md:hidden text-center mb-6 glass-panel text-slate-800 py-3 rounded-xl font-bold flex items-center justify-center gap-2 shadow-md">
+                <i data-lucide="hand" class="w-5 h-5"></i> Deslize para o lado para ver mais
+            </div>
+
+            <div class="slider-container reveal py-4 px-2">
                 <!-- Alvenaria -->
-                <div class="slider-item bg-[#f8fafc] rounded-3xl border border-slate-100 p-6 shadow-sm flex flex-col h-full cursor-pointer hover:shadow-lg transition-shadow" onclick="openModal('alvenaria')">
-                    <div class="h-40 rounded-2xl overflow-hidden mb-6 relative">
-                        <img src="" alt="Alvenaria" class="w-full h-full object-cover">
-                        <div class="absolute top-3 left-3 bg-white/90 backdrop-blur-sm px-3 py-1 text-xs font-bold text-aqua-900 rounded-full">Construção</div>
+                <div class="slider-item glass-card rounded-[2.5rem] p-6 flex flex-col h-full">
+                    <div class="h-40 md:h-48 bg-white/40 rounded-2xl overflow-hidden mb-6 relative border border-white">
+                        <!-- THUMBNAIL DO SLIDER -->
+                        <img src="assets/img/alvenaria-thumb.jpg" alt="Projeto de Piscina de Alvenaria" class="w-full h-full object-cover" loading="lazy" onerror="this.src='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'">
+                        <div class="absolute top-4 left-4 bg-white/90 backdrop-blur-md px-4 py-1.5 text-xs md:text-sm font-bold text-slate-900 rounded-full shadow-lg">Construção Estrutural</div>
                     </div>
-                    <h3 class="font-title text-2xl font-bold text-slate-800 mb-3">Betão Armado (Alvenaria)</h3>
-                    <p class="text-slate-600 text-sm mb-6 flex-grow">A estrutura definitiva. Formato livre e alta durabilidade com acabamentos premium.</p>
-                    <button class="mt-auto w-full bg-aqua-50 text-aqua-700 font-bold py-3 rounded-xl flex justify-center items-center gap-2 pointer-events-none">
-                        Ver 3D e Fotos Reais <i data-lucide="arrow-right-circle" class="w-5 h-5"></i>
+                    <h3 class="font-title text-xl md:text-2xl font-black text-slate-900 mb-3">Piscina de Alvenaria</h3>
+                    <p class="text-slate-800 font-medium text-sm md:text-base leading-relaxed mb-8 flex-grow">O modelo mais robusto e durável do mercado. Construída em concreto armado, adapta-se a qualquer projeto arquitetônico, garantindo longevidade.</p>
+                    <button onclick="openModal('alvenaria')" class="w-full bg-aqua-900 hover:bg-aqua-700 text-white font-bold text-base md:text-lg py-3 md:py-4 rounded-xl flex justify-center items-center gap-2 transition-colors shadow-lg">
+                        Conhecer Especialidade <i data-lucide="plus-circle" class="w-5 h-5 md:w-6 md:h-6"></i>
                     </button>
                 </div>
 
                 <!-- Vinil -->
-                <div class="slider-item bg-[#f8fafc] rounded-3xl border border-slate-100 p-6 shadow-sm flex flex-col h-full cursor-pointer hover:shadow-lg transition-shadow" onclick="openModal('vinil')">
-                    <div class="h-40 rounded-2xl overflow-hidden mb-6 relative">
-                        <img src="" alt="Vinil" class="w-full h-full object-cover">
-                        <div class="absolute top-3 left-3 bg-white/90 backdrop-blur-sm px-3 py-1 text-xs font-bold text-water rounded-full">Construção</div>
+                <div class="slider-item glass-card rounded-[2.5rem] p-6 flex flex-col h-full">
+                    <div class="h-40 md:h-48 bg-white/40 rounded-2xl overflow-hidden mb-6 relative border border-white">
+                        <!-- THUMBNAIL DO SLIDER -->
+                        <img src="assets/img/vinil-thumb.jpg" alt="Construção de Piscina de Vinil" class="w-full h-full object-cover" loading="lazy" onerror="this.src='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'">
+                        <div class="absolute top-4 left-4 bg-white/90 backdrop-blur-md px-4 py-1.5 text-xs md:text-sm font-bold text-slate-900 rounded-full shadow-lg">Execução Ágil</div>
                     </div>
-                    <h3 class="font-title text-2xl font-bold text-slate-800 mb-3">Piscinas de Vinil</h3>
-                    <p class="text-slate-600 text-sm mb-6 flex-grow">A união da obra rápida com a garantia de zero fugas de água estruturais.</p>
-                    <button class="mt-auto w-full bg-blue-50 text-blue-700 font-bold py-3 rounded-xl flex justify-center items-center gap-2 pointer-events-none">
-                        Ver 3D e Fotos Reais <i data-lucide="arrow-right-circle" class="w-5 h-5"></i>
+                    <h3 class="font-title text-xl md:text-2xl font-black text-slate-900 mb-3">Piscina de Vinil</h3>
+                    <p class="text-slate-800 font-medium text-sm md:text-base leading-relaxed mb-8 flex-grow">Oferece um excelente custo-benefício e rápida execução. O bolsão de vinil atua como impermeabilizante seguro, com ampla variedade estética.</p>
+                    <button onclick="openModal('vinil')" class="w-full bg-blue-900 hover:bg-blue-700 text-white font-bold text-base md:text-lg py-3 md:py-4 rounded-xl flex justify-center items-center gap-2 transition-colors shadow-lg">
+                        Conhecer Especialidade <i data-lucide="plus-circle" class="w-5 h-5 md:w-6 md:h-6"></i>
                     </button>
                 </div>
 
                 <!-- Reforma -->
-                <div class="slider-item bg-[#f8fafc] rounded-3xl border border-slate-100 p-6 shadow-sm flex flex-col h-full cursor-pointer hover:shadow-lg transition-shadow" onclick="openModal('reforma')">
-                    <div class="h-40 rounded-2xl overflow-hidden mb-6 relative">
-                        <img src="" alt="Reforma" class="w-full h-full object-cover">
-                        <div class="absolute top-3 left-3 bg-white/90 backdrop-blur-sm px-3 py-1 text-xs font-bold text-amber-600 rounded-full">Renovação</div>
+                <div class="slider-item glass-card rounded-[2.5rem] p-6 flex flex-col h-full">
+                    <div class="h-40 md:h-48 bg-white/40 rounded-2xl overflow-hidden mb-6 relative border border-white">
+                        <!-- THUMBNAIL DO SLIDER -->
+                        <img src="assets/img/reforma-thumb.jpg" alt="Reforma de Piscina Antiga" class="w-full h-full object-cover" loading="lazy" onerror="this.src='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'">
+                        <div class="absolute top-4 left-4 bg-white/90 backdrop-blur-md px-4 py-1.5 text-xs md:text-sm font-bold text-slate-900 rounded-full shadow-lg">Restauração</div>
                     </div>
-                    <h3 class="font-title text-2xl font-bold text-slate-800 mb-3">Remodelação e Restauro</h3>
-                    <p class="text-slate-600 text-sm mb-6 flex-grow">Transformamos a sua piscina de azulejo antiga (com fuga de água) numa piscina de vinil nova em folha.</p>
-                    <button class="mt-auto w-full bg-amber-50 text-amber-700 font-bold py-3 rounded-xl flex justify-center items-center gap-2 pointer-events-none">
-                        Ver 3D e Fotos Reais <i data-lucide="arrow-right-circle" class="w-5 h-5"></i>
+                    <h3 class="font-title text-xl md:text-2xl font-black text-slate-900 mb-3">Reformas em Geral</h3>
+                    <p class="text-slate-800 font-medium text-sm md:text-base leading-relaxed mb-8 flex-grow">A sua piscina atual apresenta desgaste ou falhas? Realizo revitalizações estruturais e estéticas, além de conversão de revestimentos.</p>
+                    <button onclick="openModal('reforma')" class="w-full bg-amber-600 hover:bg-amber-700 text-white font-bold text-base md:text-lg py-3 md:py-4 rounded-xl flex justify-center items-center gap-2 transition-colors shadow-lg">
+                        Conhecer Especialidade <i data-lucide="plus-circle" class="w-5 h-5 md:w-6 md:h-6"></i>
                     </button>
                 </div>
 
                 <!-- Vazamentos -->
-                <div class="slider-item bg-[#f8fafc] rounded-3xl border border-slate-100 p-6 shadow-sm flex flex-col h-full cursor-pointer hover:shadow-lg transition-shadow" onclick="openModal('vazamento')">
-                    <div class="h-40 rounded-2xl overflow-hidden mb-6 relative">
-                        <img src="" alt="Vazamento" class="w-full h-full object-cover">
-                        <div class="absolute top-3 left-3 bg-white/90 backdrop-blur-sm px-3 py-1 text-xs font-bold text-red-600 rounded-full">Urgências</div>
+                <div class="slider-item glass-card rounded-[2.5rem] p-6 flex flex-col h-full">
+                    <div class="h-40 md:h-48 bg-white/40 rounded-2xl overflow-hidden mb-6 relative border border-white">
+                        <!-- THUMBNAIL DO SLIDER -->
+                        <img src="assets/img/vazamento-thumb.jpg" alt="Reparação de Vazamento em Piscina" class="w-full h-full object-cover" loading="lazy" onerror="this.src='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'">
+                        <div class="absolute top-4 left-4 bg-white/90 backdrop-blur-md px-4 py-1.5 text-xs md:text-sm font-bold text-slate-900 rounded-full shadow-lg">Intervenção Técnica</div>
                     </div>
-                    <h3 class="font-title text-2xl font-bold text-slate-800 mb-3">Deteção de Fugas de Água</h3>
-                    <p class="text-slate-600 text-sm mb-6 flex-grow">Encontramos e reparamos o defeito nos canos sem precisar de partir todo o seu pavimento.</p>
-                    <button class="mt-auto w-full bg-red-50 text-red-700 font-bold py-3 rounded-xl flex justify-center items-center gap-2 pointer-events-none">
-                        Como funciona? <i data-lucide="arrow-right-circle" class="w-5 h-5"></i>
+                    <h3 class="font-title text-xl md:text-2xl font-black text-slate-900 mb-3">Detecção de Vazamentos</h3>
+                    <p class="text-slate-800 font-medium text-sm md:text-base leading-relaxed mb-8 flex-grow">Diagnóstico preciso de perda de água no sistema. Localizo e efetuo a reparação necessária minimizando intervenções no pavimento.</p>
+                    <button onclick="openModal('vazamento')" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold text-base md:text-lg py-3 md:py-4 rounded-xl flex justify-center items-center gap-2 transition-colors shadow-lg">
+                        Conhecer Especialidade <i data-lucide="plus-circle" class="w-5 h-5 md:w-6 md:h-6"></i>
                     </button>
                 </div>
 
                 <!-- Equipamentos -->
-                <div class="slider-item bg-[#f8fafc] rounded-3xl border border-slate-100 p-6 shadow-sm flex flex-col h-full cursor-pointer hover:shadow-lg transition-shadow" onclick="openModal('equipamentos')">
-                    <div class="h-40 rounded-2xl overflow-hidden mb-6 relative">
-                        <img src="" alt="Equipamentos" class="w-full h-full object-cover">
-                        <div class="absolute top-3 left-3 bg-white/90 backdrop-blur-sm px-3 py-1 text-xs font-bold text-purple-600 rounded-full">Tecnologia</div>
+                <div class="slider-item glass-card rounded-[2.5rem] p-6 flex flex-col h-full">
+                    <div class="h-40 md:h-48 bg-white/40 rounded-2xl overflow-hidden mb-6 relative border border-white">
+                        <!-- THUMBNAIL DO SLIDER -->
+                        <img src="assets/img/equipamentos-thumb.jpg" alt="Instalação de Bomba de Calor e Iluminação" class="w-full h-full object-cover" loading="lazy" onerror="this.src='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'">
+                        <div class="absolute top-4 left-4 bg-white/90 backdrop-blur-md px-4 py-1.5 text-xs md:text-sm font-bold text-slate-900 rounded-full shadow-lg">Automação</div>
                     </div>
-                    <h3 class="font-title text-2xl font-bold text-slate-800 mb-3">Aquecimento e Hidro</h3>
-                    <p class="text-slate-600 text-sm mb-6 flex-grow">Instalação final de bombas, bomba de calor, cascatas e automação LED RGB.</p>
-                    <button class="mt-auto w-full bg-purple-50 text-purple-700 font-bold py-3 rounded-xl flex justify-center items-center gap-2 pointer-events-none">
-                        Ver a tecnologia <i data-lucide="arrow-right-circle" class="w-5 h-5"></i>
+                    <h3 class="font-title text-xl md:text-2xl font-black text-slate-900 mb-3">Aquecimento e Iluminação</h3>
+                    <p class="text-slate-800 font-medium text-sm md:text-base leading-relaxed mb-8 flex-grow">Modernize a sua área de lazer. Executo a instalação técnica de trocadores de calor, sistemas de iluminação em LED e bicos de hidromassagem.</p>
+                    <button onclick="openModal('equipamentos')" class="w-full bg-purple-700 hover:bg-purple-800 text-white font-bold text-base md:text-lg py-3 md:py-4 rounded-xl flex justify-center items-center gap-2 transition-colors shadow-lg">
+                        Conhecer Especialidade <i data-lucide="plus-circle" class="w-5 h-5 md:w-6 md:h-6"></i>
                     </button>
                 </div>
             </div>
-            
-            <div class="text-center mt-6 md:hidden">
-                <p class="text-slate-400 text-sm flex items-center justify-center gap-2 animate-pulse">
-                    <i data-lucide="arrow-left" class="w-4 h-4"></i> Deslize e clique para abrir <i data-lucide="arrow-right" class="w-4 h-4"></i>
-                </p>
-            </div>
         </div>
     </section>
 
-    <!-- CONTATO FINAL -->
-    <section id="contato" class="py-24 px-4 bg-[#f8fafc]">
-        <div class="max-w-4xl mx-auto bg-gradient-to-br from-aqua-500 to-water rounded-[3rem] p-8 md:p-16 text-center text-white shadow-2xl relative overflow-hidden reveal">
-            <i data-lucide="waves" class="absolute -top-10 -right-10 w-64 h-64 text-white opacity-10 rotate-12"></i>
+    <!-- CONTATO FINAL (Flutuando no oceano) -->
+    <section id="contato" class="py-24 px-4 relative z-10">
+        <div class="max-w-5xl mx-auto glass-panel !bg-white/80 rounded-[3rem] p-8 md:p-16 text-center shadow-2xl relative overflow-hidden reveal border-2 border-white">
+            
             <div class="relative z-10">
-                <h2 class="font-title text-4xl md:text-5xl font-black mb-6">Pronto para o primeiro mergulho?</h2>
-                <p class="text-lg text-aqua-50 mb-10 max-w-xl mx-auto font-medium">
-                    Envie uma mensagem. Vamos entender o tamanho do seu quintal e fazer um orçamento sem qualquer compromisso.
+                <h2 class="font-title text-4xl md:text-5xl font-black mb-6 text-slate-900 drop-shadow-sm">Deseja iniciar o seu projeto?</h2>
+                <p class="text-lg md:text-xl text-slate-800 font-semibold mb-10 max-w-2xl mx-auto leading-relaxed">
+                    Clique no botão abaixo para me enviar uma mensagem pelo WhatsApp. Apresente as suas necessidades e elaborarei um orçamento detalhado sem compromisso. O atendimento é ágil e direto.
                 </p>
-                <!-- LINK CORRIGIDO NO BOTAO PRINCIPAL -->
-                <a href="https://wa.me/5514996945087?text=Ol%C3%A1!%20Vim%20pelo%20site%20e%20gostaria%20de%20fazer%20um%20or%C3%A7amento." target="_blank" class="inline-flex items-center justify-center gap-3 bg-white text-aqua-900 font-bold text-xl px-10 py-5 rounded-full hover:bg-slate-50 transition-all transform hover:scale-105 shadow-xl">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="#25D366" viewBox="0 0 16 16"><path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592zm3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.729.729 0 0 0-.529.247c-.182.198-.691.677-.691 1.654 0 .977.71 1.916.81 2.049.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232z"/></svg>
-                    Falar com a Equipa
+                <a href="https://wa.me/5514996945087?text=Ol%C3%A1!%20Vim%20pelo%20site%20e%20gostaria%20de%20fazer%20um%20or%C3%A7amento." target="_blank" class="inline-flex flex-col sm:flex-row items-center justify-center gap-4 bg-[#25D366] text-white font-black text-xl md:text-2xl px-8 md:px-12 py-5 md:py-6 rounded-full hover:bg-green-600 transition-all shadow-xl transform hover:scale-105 border-2 border-white">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="currentColor" viewBox="0 0 16 16"><path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592zm3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.729.729 0 0 0-.529.247c-.182.198-.691.677-.691 1.654 0 .977.71 1.916.81 2.049.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232z"/></svg>
+                    Falar com o Especialista
                 </a>
             </div>
         </div>
     </section>
 
-    <!-- FOOTER COMPLETO -->
-    <footer class="bg-slate-900 text-slate-400 py-12 border-t-4 border-aqua-500">
-        <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center text-center md:text-left">
-            <div class="mb-6 md:mb-0">
-                <div class="font-title font-black text-2xl text-white tracking-tight flex items-center justify-center md:justify-start gap-2 mb-2">
-                    <i data-lucide="waves" class="w-6 h-6 text-aqua-400"></i> DE<span class="text-water">+</span>PISCINAS
+    <!-- FOOTER -->
+    <footer class="bg-slate-900/90 backdrop-blur-xl text-slate-300 py-12 border-t border-white/20 relative z-10">
+        <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center text-center md:text-left gap-6">
+            <div>
+                <div class="font-title font-black text-3xl text-white tracking-tight flex items-center justify-center md:justify-start gap-2 mb-2">
+                    <i data-lucide="waves" class="w-8 h-8 text-aqua-400"></i> DE<span class="text-water">+</span>PISCINAS
                 </div>
-                <p class="text-sm font-medium text-slate-500">A transformar projetos em lazer desde 2010.</p>
+                <p class="text-sm md:text-base font-medium text-slate-400">Construindo e reformando piscinas desde 2010.</p>
             </div>
             
-            <div class="mb-6 md:mb-0 text-sm">
+            <div class="text-sm md:text-base">
                 <p>&copy; 2026 DE + PISCINAS. Todos os direitos reservados.</p>
-                <p class="mt-1">Atendimento em Marília, SP e toda a Região.</p>
+                <p class="mt-1 font-bold text-white">Atendimentos em Marília - SP e região.</p>
             </div>
             
             <div class="flex gap-4">
-                <a href="#" class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-gradient-to-tr hover:from-purple-500 hover:to-orange-500 hover:text-white transition-all duration-300" title="Siga no Instagram">
-                    <i data-lucide="instagram" class="w-5 h-5"></i>
+                <a href="#" aria-label="Siga no Instagram" class="w-12 h-12 rounded-full bg-slate-800 flex items-center justify-center hover:bg-pink-600 hover:text-white transition-all border border-slate-700">
+                    <i data-lucide="instagram" class="w-6 h-6"></i>
                 </a>
-                <a href="#" class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-blue-600 hover:text-white transition-all duration-300" title="Siga no Facebook">
-                    <i data-lucide="facebook" class="w-5 h-5"></i>
+                <a href="#" aria-label="Siga no Facebook" class="w-12 h-12 rounded-full bg-slate-800 flex items-center justify-center hover:bg-blue-600 hover:text-white transition-all border border-slate-700">
+                    <i data-lucide="facebook" class="w-6 h-6"></i>
                 </a>
             </div>
         </div>
     </footer>
 
     <!-- ======================================================= -->
-    <!-- MODAL DE SERVIÇOS (ESTRUTURA FLEXBOX CORRIGIDA)         -->
+    <!-- MODAL DE SERVIÇOS -->
     <!-- ======================================================= -->
-    <div id="service-modal" class="shadow-2xl">
-        <div id="modal-transition-overlay" class="opacity-0"></div>
-
-        <!-- CABEÇALHO FIXO -->
-        <div class="flex-none w-full bg-white/95 backdrop-blur-md z-20 px-4 py-3 border-b border-slate-200 flex items-center shadow-sm relative">
-            <button onclick="closeModal()" class="flex items-center gap-2 text-slate-600 font-bold hover:text-aqua-600 transition-colors bg-slate-100 hover:bg-slate-200 px-4 py-2 rounded-full">
-                <i data-lucide="arrow-left" class="w-5 h-5"></i> <span class="hidden sm:inline">Voltar ao site</span>
+    <div id="service-modal" class="shadow-2xl" aria-hidden="true">
+        <div class="flex-none w-full bg-slate-800 text-white z-20 px-4 py-4 border-b border-slate-900 flex justify-between items-center shadow-md relative">
+            <span class="font-title font-black text-lg md:text-2xl flex-1 truncate" id="modal-header-title">Detalhes do Serviço</span>
+            <button onclick="closeModal()" aria-label="Fechar Janela" class="flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white font-bold px-4 md:px-6 py-2 md:py-2.5 rounded-xl border-2 border-red-400 transition-colors shadow-lg">
+                <i data-lucide="x" class="w-5 h-5 md:w-6 md:h-6"></i> <span class="text-sm md:text-lg">Fechar</span>
             </button>
-            <span class="ml-4 font-title font-bold text-slate-800 text-lg flex-1 text-center md:text-left truncate" id="modal-header-title">Detalhes</span>
         </div>
 
-        <!-- ÁREA DE ROLAGEM LIVRE -->
-        <div class="flex-grow overflow-y-auto relative z-10 w-full bg-white" id="modal-scroll-area">
-            <div class="max-w-4xl mx-auto px-4 pt-6 pb-12">
+        <div class="flex-grow overflow-y-auto relative z-10 w-full bg-slate-50" id="modal-scroll-area">
+            <div class="max-w-4xl mx-auto px-4 pt-8 pb-12">
                 
-                <!-- O CONTAINER 3D -->
-                <div class="relative mb-8 shadow-inner rounded-3xl overflow-hidden border border-slate-100 bg-slate-50">
-                    <div class="absolute top-4 left-4 z-10 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-bold text-slate-700 flex items-center gap-2 shadow-sm pointer-events-none">
-                        <i data-lucide="move-3d" class="w-4 h-4 text-aqua-500"></i> Modelo 3D Conceitual
+                <div class="relative mb-10 rounded-[2rem] overflow-hidden border-4 border-white shadow-xl bg-white">
+                    <div class="absolute top-4 left-4 z-10 bg-slate-800 text-white px-3 md:px-4 py-1.5 md:py-2 rounded-xl text-xs md:text-sm font-bold shadow-md flex items-center gap-2 pointer-events-none">
+                        <i data-lucide="move-3d" class="w-4 h-4 md:w-5 md:h-5 text-aqua-400"></i> Desenho 3D Conceitual
                     </div>
-                    <div class="absolute bottom-4 right-4 z-10 bg-aqua-900/80 text-white px-3 py-2 rounded-xl text-xs flex flex-col items-center shadow-lg pointer-events-none animate-pulse">
-                        <i data-lucide="hand" class="w-5 h-5 mb-1"></i> Arraste para girar
+                    <div class="absolute bottom-4 right-4 z-10 bg-aqua-900 text-white px-4 md:px-5 py-2 md:py-3 rounded-2xl text-sm md:text-base font-bold flex items-center gap-2 md:gap-3 shadow-xl pointer-events-none border-2 border-aqua-700 animate-pulse">
+                        <i data-lucide="hand" class="w-5 h-5 md:w-6 md:h-6"></i> Toque e arraste
                     </div>
+                    <!-- LOCAL DO THREE.JS -->
                     <div id="modal-3d-container"></div>
                 </div>
 
-                <!-- O Texto Rico -->
-                <div id="modal-text-content"></div>
+                <div id="modal-text-content" class="text-base md:text-lg text-slate-800 bg-white p-6 md:p-8 rounded-[2rem] shadow-sm border border-slate-200"></div>
                 
-                <!-- A GALERIA DE FOTOS -->
-                <div class="mt-12 pt-8 border-t border-slate-200">
-                    <h3 class="font-title text-2xl font-bold text-slate-800 mb-2 flex items-center gap-2">
-                        <i data-lucide="camera" class="w-6 h-6 text-aqua-500"></i> Obras Reais Entregues
+                <div class="mt-12 pt-10">
+                    <h3 class="font-title text-2xl md:text-3xl font-black text-slate-800 mb-2 flex items-center gap-3">
+                        <i data-lucide="camera" class="w-6 h-6 md:w-8 md:h-8 text-aqua-600"></i> Registro de Obras Executadas
                     </h3>
-                    <p class="text-slate-500 text-sm mb-6">Arraste para o lado para ver como esse serviço fica na prática.</p>
-                    <div id="modal-gallery-content" class="modal-gallery-container">
-                        <!-- Imagens inseridas via JS -->
-                    </div>
+                    <p class="text-slate-600 text-base md:text-lg mb-6 font-medium">Deslize para conferir a aplicação prática desta especialidade.</p>
+                    <div id="modal-gallery-content" class="modal-gallery-container"></div>
                 </div>
 
             </div>
         </div>
 
-        <!-- RODAPÉ FIXO DO WHATSAPP (AGORA É DINÂMICO E COM O LINK BASE CORRETO!) -->
-        <div class="flex-none w-full bg-white border-t border-slate-200 p-4 z-20 shadow-[0_-10px_20px_rgba(0,0,0,0.05)] relative">
-            <a href="#" id="modal-whatsapp-btn" target="_blank" class="w-full max-w-4xl mx-auto flex justify-center items-center gap-3 bg-[#25D366] hover:bg-green-600 transition-colors text-white font-bold py-4 rounded-2xl shadow-lg transform hover:-translate-y-1">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16"><path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592zm3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.729.729 0 0 0-.529.247c-.182.198-.691.677-.691 1.654 0 .977.71 1.916.81 2.049.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232z"/></svg>
-                Fazer Orçamento deste Serviço
+        <div class="flex-none w-full bg-white border-t-2 border-slate-200 p-4 z-20 relative">
+            <a href="#" id="modal-whatsapp-btn" target="_blank" class="w-full max-w-4xl mx-auto flex justify-center items-center gap-3 bg-[#25D366] hover:bg-green-700 transition-colors text-white font-black text-lg md:text-xl py-4 md:py-5 rounded-2xl shadow-xl border-4 border-green-500 text-center px-4">
+                <i data-lucide="message-circle" class="w-6 h-6 md:w-8 md:h-8"></i>
+                <span>Solicitar Orçamento Deste Serviço</span>
             </a>
         </div>
     </div>
 
-    <!-- ======================================================= -->
-    <!-- SCRIPTS -->
-    <!-- ======================================================= -->
-    <script>
-        lucide.createIcons();
-
-        // 1. PRELOADER LÍQUIDO
-        window.addEventListener('load', () => {
-            const preloader = document.getElementById('preloader');
-            setTimeout(() => {
-                preloader.classList.add('hide');
-                document.body.classList.remove('overflow-hidden');
-                setTimeout(() => { preloader.style.display = 'none'; }, 1200);
-            }, 1000);
-        });
-
-        // 2. Menu Mobile e Scroll
-        const btnMenu = document.getElementById('mobile-menu-btn');
-        const menuLateral = document.getElementById('mobile-menu');
-        btnMenu.addEventListener('click', () => menuLateral.classList.toggle('hidden'));
-        document.querySelectorAll('#mobile-menu a').forEach(link => {
-            link.addEventListener('click', () => menuLateral.classList.add('hidden'));
-        });
-
-        window.addEventListener('scroll', () => {
-            const nav = document.getElementById('navbar');
-            if (window.scrollY > 20) nav.classList.add('shadow-md');
-            else nav.classList.remove('shadow-md');
-        });
-
-        // 3. Bolhas
-        function createBubbles() {
-            const container = document.getElementById('bubbles-container');
-            if(!container) return;
-            const bubbleCount = window.innerWidth < 768 ? 8 : 15; 
-            for (let i = 0; i < bubbleCount; i++) {
-                const bubble = document.createElement('div');
-                bubble.classList.add('bubble');
-                const size = Math.random() * 30 + 10;
-                bubble.style.width = `${size}px`; bubble.style.height = `${size}px`;
-                bubble.style.left = `${Math.random() * 100}%`;
-                bubble.style.animationDuration = `${Math.random() * 4 + 4}s`;
-                bubble.style.animationDelay = `${Math.random() * 5}s`;
-                container.appendChild(bubble);
-            }
-        }
-        createBubbles();
-
-        // 4. Scroll Reveal
-        const observerOptions = { threshold: 0.1, rootMargin: '0px 0px -20px 0px' };
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('active');
-                    observer.unobserve(entry.target);
-                }
-            });
-        }, observerOptions);
-        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-
-        // ==========================================
-        // DADOS RICOS COM GALERIAS ESPECÍFICAS
-        // ==========================================
-        const servicesData = {
-            'alvenaria': {
-                title: 'Construção em Betão Armado', tag: 'Alto Padrão', color: 'bg-aqua-100 text-aqua-800',
-                text: `
-                    <p class="mb-4 text-slate-600 text-lg leading-relaxed">A piscina de betão armado (alvenaria estrutural) é o auge da engenharia para áreas de lazer. Construímos uma fundação sólida, feita à medida para o seu terreno.</p>
-                    <ul class="list-disc pl-5 text-slate-600 space-y-2 mb-6">
-                        <li><strong>Formato Livre:</strong> Borda infinita, quadrada, prainha para crianças.</li>
-                        <li><strong>Durabilidade:</strong> Não sofre com dilatação térmica. Feita para a vida toda.</li>
-                        <li><strong>Acabamentos:</strong> Azulejos, pastilhas de vidro ou Pedra Hijau.</li>
-                    </ul>
-                `,
-                images: [
-                    '',
-                    '',
-                    ''
-                ]
-            },
-            'vinil': {
-                title: 'Obras Rápidas em Vinil', tag: 'Custo-Benefício', color: 'bg-blue-100 text-blue-800',
-                text: `
-                    <p class="mb-4 text-slate-600 text-lg leading-relaxed">As piscinas de vinil unem a versatilidade de design do betão com a rapidez e segurança da fibra.</p>
-                    <ul class="list-disc pl-5 text-slate-600 space-y-2 mb-6">
-                        <li><strong>Impermeabilização Garantida:</strong> O próprio bolsão de PVC é o selante. Zero fugas de água.</li>
-                        <li><strong>Obra Muito Mais Rápida:</strong> Sem azulejos, a obra finaliza semanas antes.</li>
-                        <li><strong>Renovação:</strong> Fartou-se? Troque o bolsão em 10 anos e tenha uma piscina com estampa nova.</li>
-                    </ul>
-                `,
-                images: [
-                    '',
-                    '',
-                    ''
-                ]
-            },
-            'reforma': {
-                title: 'Remodelação e Restauro', tag: 'A Sua Piscina Nova', color: 'bg-amber-100 text-amber-800',
-                text: `
-                    <p class="mb-4 text-slate-600 text-lg leading-relaxed">A sua piscina antiga tem conserto! Nós revitalizamos a sua área de lazer com excelência.</p>
-                    <ul class="list-disc pl-5 text-slate-600 space-y-2 mb-6">
-                        <li><strong>Azulejo para Vinil:</strong> A solução definitiva para piscinas de betão com fugas.</li>
-                        <li><strong>Troca de Bolsão:</strong> O vinil antigo ressecou? Instalamos um novo à medida.</li>
-                        <li><strong>Modificação de Formato:</strong> Alteramos a profundidade (para ficar mais rasa) ou criamos prainhas.</li>
-                    </ul>
-                `,
-                images: [
-                    '',
-                    ''
-                ]
-            },
-            'vazamento': {
-                title: 'Deteção de Fugas de Água', tag: 'Urgência', color: 'bg-red-100 text-red-800',
-                text: `
-                    <p class="mb-4 text-slate-600 text-lg leading-relaxed">Piscina a perder água compromete a fundação da casa e gera contas absurdas. Resolvemos isso de forma cirúrgica.</p>
-                    <ul class="list-disc pl-5 text-slate-600 space-y-2 mb-6">
-                        <li><strong>Testes de Pressão Hidráulica:</strong> Isolamos os canos e testamos com equipamentos precisos.</li>
-                        <li><strong>Intervenção Cirúrgica:</strong> Partimos *apenas* o pavimento exato acima do cano partido. Sem destruir o quintal.</li>
-                        <li><strong>Revisão Estrutural:</strong> Pente fino nas juntas e refletores.</li>
-                    </ul>
-                `,
-                images: [
-                    '',
-                    ''
-                ]
-            },
-            'equipamentos': {
-                title: 'Automação e Conforto', tag: 'Tecnologia', color: 'bg-purple-100 text-purple-800',
-                text: `
-                    <p class="mb-4 text-slate-600 text-lg leading-relaxed">A água é só o começo. Eleve o nível do seu lazer com instalações tecnológicas feitas por quem entende.</p>
-                    <ul class="list-disc pl-5 text-slate-600 space-y-2 mb-6">
-                        <li><strong>Sistemas de Aquecimento:</strong> Bombas de calor eficientes ou painéis solares. Água quente no inverno.</li>
-                        <li><strong>Automação LED:</strong> Troque a cor da piscina pelo telemóvel ou comando.</li>
-                        <li><strong>Hidromassagem:</strong> Calculamos o caudal correto para jatos de bolhas relaxantes.</li>
-                    </ul>
-                `,
-                images: [
-                    '',
-                    '',
-                    ''
-                ]
-            }
-        };
-
-        // ==========================================
-        // MOTOR 3D DENTRO DO MODAL
-        // ==========================================
-        let modalScene, modalCamera, modalRenderer, modalControls, animationId;
-        const container3d = document.getElementById('modal-3d-container');
-
-        function initModal3D() {
-            modalScene = new THREE.Scene();
-            modalCamera = new THREE.PerspectiveCamera(45, container3d.clientWidth / container3d.clientHeight, 0.1, 1000);
-            modalCamera.position.set(12, 10, 15);
-
-            modalRenderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-            modalRenderer.setSize(container3d.clientWidth, container3d.clientHeight);
-            modalRenderer.shadowMap.enabled = true;
-            container3d.appendChild(modalRenderer.domElement);
-
-            modalControls = new THREE.OrbitControls(modalCamera, modalRenderer.domElement);
-            modalControls.enableDamping = true;
-            modalControls.enableZoom = window.innerWidth > 768; 
-            modalControls.maxPolarAngle = Math.PI / 2 - 0.1;
-            modalControls.autoRotate = true;
-            modalControls.autoRotateSpeed = 1.0;
-
-            const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
-            modalScene.add(ambientLight);
-            const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
-            dirLight.position.set(10, 20, 10);
-            dirLight.castShadow = true;
-            modalScene.add(dirLight);
-
-            window.addEventListener('resize', () => {
-                if(!modalRenderer) return;
-                modalCamera.aspect = container3d.clientWidth / container3d.clientHeight;
-                modalCamera.updateProjectionMatrix();
-                modalRenderer.setSize(container3d.clientWidth, container3d.clientHeight);
-            });
-        }
-        initModal3D();
-
-        let currentWaterPositions = null;
-        let waterMesh = null;
-        let time3d = 0;
-
-        function build3DService(serviceId) {
-            for (let i = modalScene.children.length - 1; i >= 0; i--) {
-                const obj = modalScene.children[i];
-                if(obj.type === "Mesh") modalScene.remove(obj);
-            }
-            waterMesh = null; currentWaterPositions = null;
-
-            const deckMaterial = new THREE.MeshStandardMaterial({ color: '#e2e8f0' });
-            const deck = new THREE.Mesh(new THREE.PlaneGeometry(25, 25), deckMaterial);
-            deck.rotation.x = -Math.PI / 2; deck.receiveShadow = true; modalScene.add(deck);
-
-            let poolColor = '#cbd5e1'; 
-            let waterColor = '#0ea5e9'; 
-
-            if(serviceId === 'vinil') poolColor = '#0284c7'; 
-            if(serviceId === 'reforma') poolColor = '#fcd34d'; 
-            if(serviceId === 'equipamentos') waterColor = '#a855f7'; 
-            
-            const poolMaterial = new THREE.MeshStandardMaterial({ color: poolColor });
-            
-            const bottom = new THREE.Mesh(new THREE.BoxGeometry(8, 0.2, 5), poolMaterial); bottom.position.y = -2; modalScene.add(bottom);
-            const w1 = new THREE.Mesh(new THREE.BoxGeometry(8.4, 2, 0.2), poolMaterial); w1.position.set(0, -1, 2.6); modalScene.add(w1);
-            const w2 = new THREE.Mesh(new THREE.BoxGeometry(8.4, 2, 0.2), poolMaterial); w2.position.set(0, -1, -2.6); modalScene.add(w2);
-            const w3 = new THREE.Mesh(new THREE.BoxGeometry(0.2, 2, 5), poolMaterial); w3.position.set(4.1, -1, 0); modalScene.add(w3);
-            const w4 = new THREE.Mesh(new THREE.BoxGeometry(0.2, 2, 5), poolMaterial); w4.position.set(-4.1, -1, 0); modalScene.add(w4);
-
-            if(serviceId === 'vazamento') {
-                const pipeGeo = new THREE.CylinderGeometry(0.15, 0.15, 6);
-                const pipeMat = new THREE.MeshStandardMaterial({ color: '#ef4444' });
-                const pipe = new THREE.Mesh(pipeGeo, pipeMat);
-                pipe.rotation.z = Math.PI / 2; pipe.position.set(0, -1, 3.2); modalScene.add(pipe);
-            }
-            if(serviceId === 'alvenaria' || serviceId === 'reforma') {
-                const prainha = new THREE.Mesh(new THREE.BoxGeometry(2, 1.5, 5), poolMaterial);
-                prainha.position.set(-3, -1.25, 0); modalScene.add(prainha);
-            }
-
-            const waterGeo = new THREE.PlaneGeometry(8, 5, 15, 15);
-            const waterMat = new THREE.MeshPhysicalMaterial({ color: waterColor, transmission: 0.8, opacity: 1, roughness: 0.1 });
-            waterMesh = new THREE.Mesh(waterGeo, waterMat);
-            waterMesh.rotation.x = -Math.PI / 2; waterMesh.position.y = -0.3; modalScene.add(waterMesh);
-
-            const pos = waterMesh.geometry.attributes.position;
-            currentWaterPositions = [];
-            for (let i = 0; i < pos.count; i++) currentWaterPositions.push(pos.getZ(i));
-        }
-
-        function animateModal3D() {
-            animationId = requestAnimationFrame(animateModal3D);
-            modalControls.update();
-            time3d += 0.05;
-            if(waterMesh && currentWaterPositions) {
-                const pos = waterMesh.geometry.attributes.position;
-                for (let i = 0; i < pos.count; i++) {
-                    const x = pos.getX(i); const y = pos.getY(i);
-                    pos.setZ(i, currentWaterPositions[i] + Math.sin(x + time3d) * 0.05 + Math.cos(y + time3d) * 0.05);
-                }
-                pos.needsUpdate = true;
-            }
-            modalRenderer.render(modalScene, modalCamera);
-        }
-
-        // ==========================================
-        // CONTROLE DO MODAL DE SERVIÇOS
-        // ==========================================
-        const modal = document.getElementById('service-modal');
-        const modalScrollArea = document.getElementById('modal-scroll-area');
-        const modalText = document.getElementById('modal-text-content');
-        const modalTitle = document.getElementById('modal-header-title');
-        const modalOverlay = document.getElementById('modal-transition-overlay');
-        const modalGallery = document.getElementById('modal-gallery-content');
-        const modalWaBtn = document.getElementById('modal-whatsapp-btn');
-
-        function openModal(serviceId) {
-            const data = servicesData[serviceId];
-            if(!data) return;
-
-            // 1. Textos
-            modalTitle.innerText = data.title;
-            modalText.innerHTML = `
-                <div class="inline-block ${data.color} text-xs font-bold px-3 py-1 rounded-full mb-4 uppercase tracking-wide">${data.tag}</div>
-                <h2 class="font-title text-3xl md:text-5xl font-black text-slate-800 mb-8">${data.title}</h2>
-                <div class="text-slate-600">
-                    ${data.text}
-                </div>
-            `;
-
-            // 2. Imagens Reais
-            let galleryHTML = '';
-            data.images.forEach(imgSrc => {
-                galleryHTML += `
-                    <div class="modal-gallery-item flex-shrink-0">
-                        <img src="${imgSrc}" class="w-full h-full object-cover" alt="Obra">
-                    </div>
-                `;
-            });
-            modalGallery.innerHTML = galleryHTML;
-
-            // 3. Atualiza o Botão do WhatsApp (LINKS TOTALMENTE CORRIGIDOS AQUI!)
-            const numeroWa = "5514996945087";
-            const mensagem = encodeURIComponent(`Olá! Gostaria de fazer um orçamento de ${data.title}.`);
-            modalWaBtn.href = `https://wa.me/${numeroWa}?text=${mensagem}`;
-
-            // Garante que o scroll comece no topo sempre
-            modalScrollArea.scrollTop = 0;
-
-            modalOverlay.style.opacity = '1';
-            build3DService(serviceId);
-            document.body.style.overflow = 'hidden';
-            modal.classList.add('active');
-            
-            cancelAnimationFrame(animationId);
-            animateModal3D();
-
-            setTimeout(() => {
-                modalCamera.aspect = container3d.clientWidth / container3d.clientHeight;
-                modalCamera.updateProjectionMatrix();
-                modalRenderer.setSize(container3d.clientWidth, container3d.clientHeight);
-                modalOverlay.style.opacity = '0';
-            }, 500);
-            
-            setTimeout(() => { lucide.createIcons(); }, 100);
-        }
-
-        function closeModal() {
-            document.body.style.overflow = 'auto';
-            modal.classList.remove('active');
-            cancelAnimationFrame(animationId);
-        }
-    </script>
+    <!-- CHAMADA PARA O ARQUIVO JAVASCRIPT EXTERNO -->
+    <script src="js/main.js"></script>
 </body>
 </html>
-
-
-
